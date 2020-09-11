@@ -1,0 +1,19 @@
+<VirtualHost starter.anaxago.local.com:80>
+    ServerAdmin webmaster@localhost
+    DocumentRoot DOCUMENT_ROOT
+    ServerAlias starter.anaxago.local.com
+
+    DirectoryIndex /index.php
+
+    <Directory DOCUMENT_ROOT>
+        AllowOverride All
+        Order Allow,Deny
+        Allow from All
+        Require all granted
+        FallbackResource /index.php
+    </Directory>
+
+    ErrorLog /var/log/apache2/anaxago-starter/error.log
+    CustomLog /var/log/apache2/anaxago-starter/access.log combined
+    CustomLog /var/log/apache2/anaxago-starter/bwizus.log test
+</VirtualHost>

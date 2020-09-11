@@ -1,0 +1,3 @@
+anaxago_starter_homepage:
+    path:     /
+    controller: App\Controller\DefaultController::index

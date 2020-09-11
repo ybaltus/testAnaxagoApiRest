@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Inscription</h1>
+    {{ form_start(form) }}
+    {{ form_row(form) }}
+    <button class="btn btn-outline-success w-100" type="submit">S'inscrire</button>
+    {{ form_end(form) }}
+{% endblock %}
