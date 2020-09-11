@@ -18,7 +18,6 @@ Pour lancer le projet vous aurez besoin de
 ```
 make start-project
 ```
-* Créer son fichier .env.local a partir des informations manquantes et let's go
 
 # Effacer le host
 
