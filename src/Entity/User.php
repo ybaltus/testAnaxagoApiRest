@@ -8,13 +8,21 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="user")
- */
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     message="This email already exists."
+ * ) */
 class User implements UserInterface
 {
     /**
@@ -30,6 +38,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string")
+     * @Assert\NotBlank
      */
     private $firstName;
 
@@ -37,6 +46,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string")
+     * @Assert\NotBlank
      */
     private $lastName;
 
@@ -71,9 +81,25 @@ class User implements UserInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", unique=true)
      */
     private $email;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ProjectInvestment::class, mappedBy="user")
+     */
+    private $investments;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $created_at;
+
+    public function __construct()
+    {
+        $this->investments = new ArrayCollection();
+        $this->created_at = new \DateTime('now');
+    }
 
     /**
      * @return int
@@ -276,5 +302,48 @@ class User implements UserInterface
     public function eraseCredentials(): void
     {
         $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection|ProjectInvestment[]
+     */
+    public function getInvestments(): Collection
+    {
+        return $this->investments;
+    }
+
+    public function addInvestment(ProjectInvestment $investment): self
+    {
+        if (!$this->investments->contains($investment)) {
+            $this->investments[] = $investment;
+            $investment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvestment(ProjectInvestment $investment): self
+    {
+        if ($this->investments->contains($investment)) {
+            $this->investments->removeElement($investment);
+            // set the owning side to null (unless already changed)
+            if ($investment->getUser() === $this) {
+                $investment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
     }
 }
