@@ -19,6 +19,9 @@ use Doctrine\Persistence\ObjectManager;
  */
 class ProjectFixtures extends Fixture
 {
+    public const Project1_REFERENCE = 'projectPI1';
+    public const Project2_REFERENCE = 'projectPI2';
+
     /**
      * Load data fixtures with the passed EntityManager
      *
@@ -26,14 +29,29 @@ class ProjectFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
+        $project1Reference = null;
+        $project2Reference = null;
         foreach ($this->getProjects() as $project) {
             $projectToPersist = (new Project())
                 ->setTitle($project['name'])
                 ->setDescription($project['description'])
-                ->setSlug($project['slug']);
+                ->setSlug($project['slug'])
+                ->setCreatedAt(new \DateTime('now'));
             $manager->persist($projectToPersist);
+
+            if($project1Reference !== null AND $project2Reference == null)
+                $project2Reference = $projectToPersist;
+
+            if($project1Reference == null)
+                $project1Reference = $projectToPersist;
+
         }
         $manager->flush();
+
+        //Other fixtures can get these objects
+        $this->addReference(self::Project1_REFERENCE, $project1Reference);
+        $this->addReference(self::Project2_REFERENCE, $project2Reference);
+
     }
 
     /**

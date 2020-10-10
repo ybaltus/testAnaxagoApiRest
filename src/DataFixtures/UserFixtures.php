@@ -20,10 +20,13 @@ class UserFixtures extends Fixture
      */
     private $passwordEncoder;
 
+    public const USER_REFERENCE = 'userPI';
+
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
     }
+
     /**
      * Load data fixtures with the passed EntityManager
      *
@@ -35,7 +38,8 @@ class UserFixtures extends Fixture
             ->setFirstName('John')
             ->setLastName('Doe')
             ->setEmail('john@local.com')
-            ->setPlainPassword('john');
+            ->setPlainPassword('john')
+            ->setCreatedAt(new \DateTime('now'));
         $password = $this->passwordEncoder->encodePassword($investor, $investor->getPlainPassword());
         $investor->setPassword($password);
         $manager->persist($investor);
@@ -46,12 +50,16 @@ class UserFixtures extends Fixture
             ->setEmail('admin@local.com')
             // because we like security
             ->setPlainPassword('admin')
-            ->addRoles('ROLE_ADMIN')
+            ->setCreatedAt(new \DateTime('now'))
+            ->addRoles('ROLE_ADMIN');
         ;
         $password = $this->passwordEncoder->encodePassword($admin, $admin->getPlainPassword());
         $admin->setPassword($password);
         $manager->persist($admin);
 
         $manager->flush();
+
+        //Other fixtures can get this object
+        $this->addReference(self::USER_REFERENCE, $investor);
     }
 }
