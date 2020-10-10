@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Project
@@ -20,6 +21,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Project
 {
+    const STATUS_FUNDED = [
+        0 => 'no-funded',
+        1 => 'funded',
+    ];
+
     /**
      * @var int
      *
@@ -42,6 +48,8 @@ class Project
      *
      * @ORM\Column(name="title", type="string", length=255)
      * @Assert\NotBlank
+     *
+     * @Serializer\Groups({"list"})
      */
     private $title;
 
@@ -55,6 +63,7 @@ class Project
 
     /**
      * @ORM\Column(name="fully_funded", type="boolean", options={"default":false})
+     * @Serializer\Groups({"list"})
      */
     private $fully_funded=false;
 
