@@ -10,14 +10,14 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
   
 # Outils
 * [Symfony5](https://symfony.com/4)
-* [Jms/serializer-bundle](https://packagist.org/packages/jms/serializer-bundle) pour sérialiser et désérialiser les données. Elle l’offre des fonctionnalités pratique pour travailler. 
+* [Jms/serializer-bundle](https://packagist.org/packages/jms/serializer-bundle) pour sérialiser et désérialiser les données. Elle offre des fonctionnalités pratiques pour travailler. J'aurai bien pu utiliser le seralizer de symfony. 
 * [SwiftMailer](https://packagist.org/packages/swiftmailer/swiftmailer) pour gérer les envois d’emails.
 * (Optionnel) [Maildev](https://maildev.com/) pour capturer les envois d’emails.
 * (Optionnel) [PostMan](https://www.postman.com/) pour exécuter des requêtes http.
 
 # Initialiser le projet
 
-#### :warning: Créer son fichier .env.local a partir des informations de la base de données. Sinon les commandes suivantes ne pourront pas fonctionner!
+#### :warning: Créer son fichier .env.local qui contiendra les informations de sa base de données. Sinon les commandes suivantes ne pourront pas fonctionner!
 
 ```
 composer install
@@ -30,18 +30,18 @@ php bin/console doctrine:fixtures:load
 # Utiliser l'API REST
 #### Les URI doivent être préfixés de "/api/v1".
 
-1. **Récupérer la liste des projets et leurs status**
+1. **Récupérer la liste des projets et leur status d'avancement**
 <br>- Méthode: GET
 <br>- URI: /list/projects
 <br>- Format: JSON
 
-2. **Investir dans un projet en précisant un montant**
+2. **Permettre à un utilisateur d'investir dans un projet en précisant un montant**
 <br>- Méthode: POST
 <br>- URI: /investment/add
 <br>- Paramètres: email, password, amount, slug
 <br>- Format: JSON
 
-3. **Récupérer la liste des projets investit par utilisateur**
+3. **Récupérer la liste des investissements par un utilisateur**
 <br>- Méthode: GET
 <br>- URI: /list/user/projects
 <br>- Paramètres: email, password
