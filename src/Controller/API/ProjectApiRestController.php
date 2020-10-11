@@ -83,7 +83,7 @@ class ProjectApiRestController extends AbstractController
         $amount = $request->request->get('amount');
 
         //Check missing arguments
-        $response = $this->missingArgumentsHandler($slug, $email, false, $plainPassword, $amount);
+        $response = $this->missingArgumentsHandler($email, $plainPassword,false, $slug, $amount);
         if(isset($response))
             return $response;
 
@@ -141,24 +141,23 @@ class ProjectApiRestController extends AbstractController
      * @param $plainPassword
      * @param $amount
      * @param bool $isUnauthorized
-     * @return Response|null
+     * @return Response
      */
-    private function missingArgumentsHandler($slug, $email, $isUnauthorized, $plainPassword=null, $amount=null)
+    private function missingArgumentsHandler($email, $plainPassword, $isUnauthorized, $slug=null, $amount=null)
     {
-        $response = null;
+        $response= new Response("Error occured - Bad request - Missing arguments", Response::HTTP_BAD_REQUEST);
         if($isUnauthorized == true)
         {
             if(!isset($email) OR !isset($password))
             {
-                $response= new Response("Error occured - Bad request - Missing arguments", Response::HTTP_BAD_REQUEST);
+                return $response;
             }
         }else{
             if(!isset($email) OR !isset($plainPassword) OR !isset($amount) OR !isset($slug))
             {
-                $response= new Response("Error occured - Bad request - Missing arguments", Response::HTTP_BAD_REQUEST);
+                return $response;
             }
         }
-        return $response;
     }
 
     /**
