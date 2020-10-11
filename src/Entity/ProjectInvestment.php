@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProjectInvestmentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass=ProjectInvestmentRepository::class)
@@ -24,6 +25,7 @@ class ProjectInvestment
     /**
      * @ORM\Column(type="integer", nullable=false)
      * @Assert\PositiveOrZero
+     * @Serializer\Groups({"info"})
      */
     private $amount;
 
@@ -31,6 +33,7 @@ class ProjectInvestment
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="investments")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      * @Assert\Type(type="App\Entity\User")
+     * @Serializer\Groups({"info"})
      */
     private $user;
 
@@ -38,6 +41,7 @@ class ProjectInvestment
      * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="investments")
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
      * @Assert\Type(type="App\Entity\Project")
+     * @Serializer\Groups({"info"})
      */
     private $project;
 

@@ -49,7 +49,7 @@ class Project
      * @ORM\Column(name="title", type="string", length=255)
      * @Assert\NotBlank
      *
-     * @Serializer\Groups({"list"})
+     * @Serializer\Groups({"info"})
      */
     private $title;
 
@@ -63,7 +63,7 @@ class Project
 
     /**
      * @ORM\Column(name="fully_funded", type="boolean", options={"default":false})
-     * @Serializer\Groups({"list"})
+     * @Serializer\Groups({"info"})
      */
     private $fully_funded=false;
 

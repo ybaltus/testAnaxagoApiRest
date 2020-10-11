@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use JMS\Serializer\Annotation as Serializer;
 
 
 /**
@@ -22,7 +23,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity(
  *     fields={"email"},
  *     message="This email already exists."
- * ) */
+ * )
+ */
 class User implements UserInterface
 {
     /**
@@ -39,6 +41,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string")
      * @Assert\NotBlank
+     * @Serializer\Groups({"info"})
      */
     private $firstName;
 
@@ -47,6 +50,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string")
      * @Assert\NotBlank
+     * @Serializer\Groups({"info"})
      */
     private $lastName;
 
@@ -76,12 +80,14 @@ class User implements UserInterface
     /**
      * @var string
      * @ORM\Column(type="string")
+     * @Serializer\Groups({"info"})
      */
     private $username;
 
     /**
      * @var string
      * @ORM\Column(type="string", unique=true)
+     * @Serializer\Groups({"info"})
      */
     private $email;
 
