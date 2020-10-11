@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Project;
 use App\Entity\ProjectInvestment;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,6 +19,17 @@ class ProjectInvestmentRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ProjectInvestment::class);
+    }
+
+    public function findByUserProject(User $user, Project $project)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.project = :project')
+            ->setParameters(array('user'=>$user, 'project'=>$project))
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
     }
 
     // /**
