@@ -107,6 +107,7 @@ class ProjectApiRestController extends AbstractController
             $invest->setProject($project);
             $invest->setAmount($amount);
         }else{
+            $invest->setUpdatedAt(new \DateTime('now'));
             $invest->setAmount($amount+$invest->getAmount());
         }
         $this->em->persist($invest);
@@ -129,9 +130,18 @@ class ProjectApiRestController extends AbstractController
         $repository = $this->getDoctrine()->getRepository(ProjectInvestment::class);
         $sum_funding = $repository->getSumFundedByProject($invest->getProject());
 
+        //Check the threshold of the project
         if($sum_funding >= $invest->getProject()->getThreshold())
         {
-            $users = $repository->getUserByProject($invest->getProject());
+            //Update the project
+            $invest->getProject()->setFullyFunded(true);
+            $this->em->persist($invest->getProject());
+            $this->em->flush();
+
+            //Get the users
+            $users = $repository->getUserByProjectInvest($invest);
+
+            //Send notifications to the users
             $notification->notify($invest->getProject(), $sum_funding, $users);
         }
     }

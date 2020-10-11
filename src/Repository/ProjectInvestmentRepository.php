@@ -53,13 +53,18 @@ class ProjectInvestmentRepository extends ServiceEntityRepository
             ;
     }
 
-    public function getUserByProject(Project $project)
+    public function getUserByProjectInvest(ProjectInvestment $invest)
     {
         return $this->createQueryBuilder('p')
-            ->select('u.firstName, u.lastName, u.email, p.amount')
-            ->join('p.user', 'u')
-            ->andWhere('p.project = :project')
-            ->setParameter('project',$project)
+            ->select('u.firstName, u.lastName, u.email, p.amount', 'i.created_at', 'i.updated_at')
+            ->innerJoin('p.user', 'u')
+            ->leftJoin('u.investments', 'i')
+            ->where('p.project = :project')
+            ->andWhere('i.id = :invest')
+            ->setParameters(array(
+                'project' => $invest->getProject(),
+                'invest' => $invest
+            ))
             ->getQuery()
             ->getResult();
         ;

@@ -27,8 +27,7 @@ class ThresholdNotification
 
     public function notify(Project $project, $sum_funding, $users)
     {
-        //users[firstname, lastname, email, amount]
-
+        //users[firstname, lastname, email, amount, created_at, updated_at]
         foreach ($users as $user)
         {
             $message= (new \Swift_Message('Le projet '.$project->getTitle().' est financé.'))
