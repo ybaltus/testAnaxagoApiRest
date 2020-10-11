@@ -114,6 +114,47 @@ class ProjectApiRestController extends AbstractController
         return $this->responseInfoHandler($invest, Response::HTTP_CREATED, "Investment correctly added.");
     }
 
+    /**
+     * Get list of projects by user
+     *
+     * @Route("/list/user/projects", name="api_list_user_project", methods={"GET"})
+     * @param Request $request
+     * @return object|Response|null
+     */
+    public function listProjectUser(Request $request)
+    {
+        //Get parameters
+        $email = $request->query->get('email');
+        $plainPassword = $request->query->get('password');
+
+        //Check missing arguments
+        $response = $this->missingArgumentsHandler($email, $plainPassword, true);
+        if(isset($response))
+            return $response;
+
+        //Check user exist
+        $user = $this->identifierHandler($email, $plainPassword);
+        if(!$user instanceof User)
+            return $user;
+
+        //Get list of projects
+        $investments = $this->getDoctrine()->getRepository(ProjectInvestment::class)->findByUser($user);
+        $data = array();
+        if(isset($investments) AND count($investments)>0)
+        {
+            foreach ($investments as $invest)
+            {
+                $data[] = [
+                    "title" => $invest->getProject()->getTitle(),
+                    "description" => $invest->getProject()->getDescription(),
+                    "status" => Project::STATUS_FUNDED[$invest->getProject()->getFullyFunded()],
+                    "amount" => $invest->getAmount()
+                ];
+            }
+        }
+
+        return $this->responseInfoHandler($data, Response::HTTP_OK, "List of projects correctly returned.");
+    }
 
     /**
      * Get the responses with seralizerContext:info
@@ -148,7 +189,7 @@ class ProjectApiRestController extends AbstractController
         $response= new Response("Error occured - Bad request - Missing arguments", Response::HTTP_BAD_REQUEST);
         if($isUnauthorized == true)
         {
-            if(!isset($email) OR !isset($password))
+            if(!isset($email) OR !isset($plainPassword))
             {
                 return $response;
             }

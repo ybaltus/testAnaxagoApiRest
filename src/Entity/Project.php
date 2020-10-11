@@ -58,6 +58,7 @@ class Project
      *
      * @ORM\Column(name="description", type="text")
      * @Assert\NotBlank
+     * @Serializer\Groups({"info"})
      */
     private $description;
 

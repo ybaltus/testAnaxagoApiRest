@@ -32,6 +32,16 @@ class ProjectInvestmentRepository extends ServiceEntityRepository
             ;
     }
 
+    public function findByUser(User $user)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user',$user)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return ProjectInvestment[] Returns an array of ProjectInvestment objects
     //  */
