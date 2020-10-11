@@ -28,24 +28,24 @@ php bin/console doctrine:fixtures:load
 > Pour les tests avec phpunit il faut configuer les informations de la base de données dans le fichier .env.test
 
 # Utiliser l'API REST
-#### Les URI doivent être préfixés de /api/v1 et les données sont transmises en JSON.
+#### Les URI doivent être préfixés de "/api/v1".
 
 1. **Récupérer la liste des projets et leurs status**
 <br>- Méthode: GET
 <br>- URI: /list/projects
+<br>- Format: JSON
 
 2. **Investir dans un projet en précisant un montant**
 <br>- Méthode: POST
 <br>- URI: /investment/add
 <br>- Paramètres: email, password, amount, slug
+<br>- Format: JSON
 
 3. **Récupérer la liste des projets investit par utilisateur**
 <br>- Méthode: GET
 <br>- URI: /list/user/projects
 <br>- Paramètres: email, password
-
-***
-Give instructions on how to collaborate with your project.
+<br>- Format: JSON
 
 # Lancer le projet avec start-project (optionnel)
 
