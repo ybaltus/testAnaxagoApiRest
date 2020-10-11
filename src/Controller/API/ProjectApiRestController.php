@@ -5,6 +5,7 @@ namespace App\Controller\API;
 use App\Entity\Project;
 use App\Entity\ProjectInvestment;
 use App\Entity\User;
+use App\Notification\ThresholdNotification;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -74,7 +75,7 @@ class ProjectApiRestController extends AbstractController
      * @param Request $request
      * @return object|Response|null
      */
-    public function addProjectInvestment(Request $request)
+    public function addProjectInvestment(Request $request, ThresholdNotification $notification)
     {
         //Post parameters
         $slug=$request->request->get('slug');
@@ -111,7 +112,28 @@ class ProjectApiRestController extends AbstractController
         $this->em->persist($invest);
         $this->em->flush();
 
+        //If the project is funded, send notifications to the investors
+        $this->sendThresholdNotifications($notification, $invest);
+
         return $this->responseInfoHandler($invest, Response::HTTP_CREATED, "Investment correctly added.");
+    }
+
+    /**
+     * Send thresholdNotifications
+     *
+     * @param $notification
+     * @param $invest
+     */
+    private function sendThresholdNotifications($notification, $invest)
+    {
+        $repository = $this->getDoctrine()->getRepository(ProjectInvestment::class);
+        $sum_funding = $repository->getSumFundedByProject($invest->getProject());
+
+        if($sum_funding >= $invest->getProject()->getThreshold())
+        {
+            $users = $repository->getUserByProject($invest->getProject());
+            $notification->notify($invest->getProject(), $sum_funding, $users);
+        }
     }
 
     /**

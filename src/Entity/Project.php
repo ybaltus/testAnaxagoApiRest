@@ -78,6 +78,13 @@ class Project
      */
     private $created_at;
 
+    /**
+     * @ORM\Column(name="treshold", type="integer")
+     * @Assert\PositiveOrZero
+     * @Serializer\Groups({"info"})
+     */
+    private $threshold;
+
     public function __construct()
     {
         $this->investments = new ArrayCollection();
@@ -229,6 +236,18 @@ class Project
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getThreshold(): ?int
+    {
+        return $this->threshold;
+    }
+
+    public function setThreshold(int $threshold): self
+    {
+        $this->threshold = $threshold;
 
         return $this;
     }

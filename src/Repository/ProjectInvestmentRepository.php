@@ -42,6 +42,29 @@ class ProjectInvestmentRepository extends ServiceEntityRepository
             ;
     }
 
+    public function getSumFundedByProject(Project $project)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('SUM(p.amount) as funding')
+            ->andWhere('p.project = :project')
+            ->setParameter('project',$project)
+            ->getQuery()
+            ->getSingleScalarResult();
+            ;
+    }
+
+    public function getUserByProject(Project $project)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('u.firstName, u.lastName, u.email, p.amount')
+            ->join('p.user', 'u')
+            ->andWhere('p.project = :project')
+            ->setParameter('project',$project)
+            ->getQuery()
+            ->getResult();
+        ;
+    }
+
     // /**
     //  * @return ProjectInvestment[] Returns an array of ProjectInvestment objects
     //  */

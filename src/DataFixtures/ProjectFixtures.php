@@ -36,6 +36,7 @@ class ProjectFixtures extends Fixture
                 ->setTitle($project['name'])
                 ->setDescription($project['description'])
                 ->setSlug($project['slug'])
+                ->setThreshold(30000)
                 ->setCreatedAt(new \DateTime('now'));
             $manager->persist($projectToPersist);
 
