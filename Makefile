@@ -27,9 +27,9 @@ start-project: ## Create private.key public.key with passphrase
 	$(SUDO) a2ensite starter-anaxago.conf
 	$(SUDO) systemctl restart apache2.service
 	@echo -e "Host prêt à l'emploi"
-	php bin/console doc:dat:cre
-	php bin/console doc:sch:up --force
-	php bin/console doc:fix:load
+	php bin/console doctrine:database:create
+	php bin/console doctrine:migrations:migrate
+	php bin/console doctrine:fixtues:load
 	@echo -e "Rendez-vous sur http://starter.anaxago.local.com "
 
 clean-starter-project: ## Create private.key public.key with passphrase
