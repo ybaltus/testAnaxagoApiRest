@@ -244,8 +244,7 @@ class ProjectApiRestController extends AbstractController
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(array('email'=>$email));
         if(isset($user))
         {
-            $user->setPlainPassword($plainPassword);
-            if($this->passwordEncoder->isPasswordValid($user, $user->getPlainPassword()))
+            if($this->passwordEncoder->isPasswordValid($user, $plainPassword))
                 return $user;
         }
         return new Response("Error occured - Bad authentication", Response::HTTP_UNAUTHORIZED);
