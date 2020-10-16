@@ -6,7 +6,6 @@ use App\Entity\Project;
 use App\Entity\ProjectInvestment;
 use App\Notification\ThresholdNotification;
 use Doctrine\ORM\EntityManagerInterface;
-use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
@@ -79,6 +78,7 @@ class ApiListener
 
             //Send notifications to the users
             $this->notification->notify($project, $sum_funding, $users);
+            $this->logger->info('Emails sends to users for the project'.$project->getTitle());
             }
         }
     }
