@@ -75,7 +75,7 @@ class ProjectApiRestController extends AbstractController
      * @param Request $request
      * @return object|Response|null
      */
-    public function addProjectInvestment(Request $request, ThresholdNotification $notification)
+    public function addProjectInvestment(Request $request)
     {
         //Post parameters
         $slug=$request->request->get('slug');
@@ -113,37 +113,9 @@ class ProjectApiRestController extends AbstractController
         $this->em->persist($invest);
         $this->em->flush();
 
-        //If the project is funded, send notifications to the investors
-        $this->sendThresholdNotifications($notification, $invest);
+        /** EventListerner/ApiListener (event kernel.terminate): If the project is funded, send notifications to the investors */
 
         return $this->responseInfoHandler($invest, Response::HTTP_CREATED, "Investment correctly added.");
-    }
-
-    /**
-     * Send thresholdNotifications
-     *
-     * @param $notification
-     * @param $invest
-     */
-    private function sendThresholdNotifications($notification, $invest)
-    {
-        $repository = $this->getDoctrine()->getRepository(ProjectInvestment::class);
-        $sum_funding = $repository->getSumFundedByProject($invest->getProject());
-
-        //Check the threshold of the project
-        if($sum_funding >= $invest->getProject()->getThreshold())
-        {
-            //Update the project
-            $invest->getProject()->setFullyFunded(true);
-            $this->em->persist($invest->getProject());
-            $this->em->flush();
-
-            //Get the users
-            $users = $repository->getUserByProjectInvest($invest);
-
-            //Send notifications to the users
-            $notification->notify($invest->getProject(), $sum_funding, $users);
-        }
     }
 
     /**
